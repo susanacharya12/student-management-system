@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student List</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Students</h1>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <ul>
+        {% for student in students %}
+            <li>
+                {{ student.name }} - {{ student.grade }}
+                <a href="{% url 'student_update' student.pk %}">Edit</a>
+                <a href="{% url 'student_delete' student.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Student Distribution by Grade</h2>
+    <canvas id="gradeChart" width="400" height="200"></canvas>
+
+    <script>
+        const ctx = document.getElementById('gradeChart').getContext('2d');
+        const gradeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for data in grade_data %}'{{ data.grade }}',{% endfor %}],
+                datasets: [{
+                    label: 'Number of Students',
+                    data: [{% for data in grade_data %}{{ data.count }},{% endfor %}],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
